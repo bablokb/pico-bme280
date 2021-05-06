@@ -35,6 +35,10 @@ void init_hw() {
 int8_t init_sensor(struct bme280_dev *dev, uint32_t *delay) {
   int8_t rslt = BME280_OK;
   uint8_t settings;
+
+  // give sensor time to startup
+  sleep_ms(5);                    // datasheet: 2ms
+
   // basic initialization
   dev->intf_ptr = SPI_PORT;       // SPI_PORT is an address
   dev->intf     = BME280_SPI_INTF;
