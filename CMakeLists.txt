@@ -1,3 +1,11 @@
+## --------------------------------------------------------------------------
+## Read BME280 sensor values with a Raspberry Pi Pico using the official Bosch-API
+##
+## Author: Bernhard Bablok
+##
+## https://github.com/bablokb/pico-bme280
+## --------------------------------------------------------------------------
+
 # Generated Cmake Pico project file
 
 cmake_minimum_required(VERSION 3.13)
@@ -7,7 +15,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 # initalize pico_sdk from installed location
 # (note this can come from environment, CMake cache etc)
-set(PICO_SDK_PATH "/data/pico/pico-sdk")
+#set(PICO_SDK_PATH "/path/to/sdk")
 
 # Pull in Raspberry Pi Pico SDK (must be before project)
 include(pico_sdk_import.cmake)
