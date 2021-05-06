@@ -1,9 +1,21 @@
+// --------------------------------------------------------------------------
+// Read BME280 sensor values with a Raspberry Pi Pico using the official Bosch-API
+//
+// Author: Bernhard Bablok
+//
+// https://github.com/bablokb/pico-bme280
+// --------------------------------------------------------------------------
+
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "hardware/spi.h"
 
 #include "user.h"
 #include "bme280.h"
+
+// ---------------------------------------------------------------------------
+// hardware-specific intialization
+// SPI_* constants from CMakeLists.txt or user.h
 
 void init_hw() {
   stdio_init_all();
@@ -16,6 +28,9 @@ void init_hw() {
   gpio_set_dir(SPI_CS, GPIO_OUT);
   gpio_put(SPI_CS, 1);                        // Chip select is active-low
 }
+
+// ---------------------------------------------------------------------------
+// initialize sensor
 
 int8_t init_sensor(struct bme280_dev *dev, uint32_t *delay) {
   int8_t rslt = BME280_OK;
@@ -45,7 +60,11 @@ int8_t init_sensor(struct bme280_dev *dev, uint32_t *delay) {
   return rslt;
 }
 
-int8_t read_sensor(struct bme280_dev *dev, uint32_t *delay, struct bme280_data *data) {
+// ---------------------------------------------------------------------------
+// read sensor values
+
+int8_t read_sensor(struct bme280_dev *dev, uint32_t *delay,
+                   struct bme280_data *data) {
   int8_t rslt;
   rslt = bme280_set_sensor_mode(BME280_FORCED_MODE, dev);
   if (rslt != BME280_OK) {
@@ -55,6 +74,9 @@ int8_t read_sensor(struct bme280_dev *dev, uint32_t *delay, struct bme280_data *
   return bme280_get_sensor_data(BME280_ALL,data,dev);
 }
 
+// ---------------------------------------------------------------------------
+// print sensor data to console
+
 void print_data(struct bme280_data *data) {
   float temp, press, hum;
   temp  = 0.01f * data->temperature;
@@ -62,6 +84,9 @@ void print_data(struct bme280_data *data) {
   hum   = 1.0f / 1024.0f * data->humidity;
   printf("%0.2lf deg C, %0.2lf hPa, %0.2lf%%\n", temp, press, hum);
 }
+
+// ---------------------------------------------------------------------------
+// main loop: read data and print data to console
 
 int main() {
   struct bme280_dev dev;

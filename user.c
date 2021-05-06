@@ -1,3 +1,10 @@
+// --------------------------------------------------------------------------
+// Definition of user-supplied functions for Bosch-API
+//
+// Author: Bernhard Bablok
+//
+// https://github.com/bablokb/pico-bme280
+// --------------------------------------------------------------------------
 #include "user.h"
 #include "pico/stdlib.h"
 #include "hardware/spi.h"

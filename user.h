@@ -1,3 +1,11 @@
+// --------------------------------------------------------------------------
+// Declaration of user-supplied functions for Bosch-API
+//
+// Author: Bernhard Bablok
+//
+// https://github.com/bablokb/pico-bme280
+// --------------------------------------------------------------------------
+
 #ifndef _USER_H
 #define _USER_H
 
