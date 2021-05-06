@@ -12,7 +12,7 @@ void init_hw() {
   gpio_set_function(SPI_SCK,GPIO_FUNC_SPI);
   gpio_set_function(SPI_TX, GPIO_FUNC_SPI);
 
-  gpio_set_function(SPI_CS, GPIO_FUNC_SIO);
+  gpio_init(SPI_CS);
   gpio_set_dir(SPI_CS, GPIO_OUT);
   gpio_put(SPI_CS, 1);                        // Chip select is active-low
 }
@@ -69,9 +69,9 @@ int main() {
   int8_t rslt;
   uint32_t delay;               // calculated delay between measurements
   init_hw();
-  init_sensor(&dev,&delay);  
+  rslt = init_sensor(&dev,&delay);
   if (rslt != BME280_OK) {
-    printf("could not initialize sensor. RC: %d", rslt);
+    printf("could not initialize sensor. RC: %d\n", rslt);
   } else {
     printf("Temperature, Pressure, Humidity\n");
     while (read_sensor(&dev,&delay,&sensor_data) == BME280_OK) {
