@@ -29,12 +29,22 @@ pico_sdk_init()
 
 add_executable(pico-bme280 pico-bme280.c bme280.c user.c)
 
-add_compile_options(-DSPI_PORT=spi1)
-add_compile_options(-DSPI_RX=12)
-add_compile_options(-DSPI_CS=13)
-add_compile_options(-DSPI_SCK=14)
-add_compile_options(-DSPI_TX=15)
-add_compile_options(-DBME280_32BIT_ENABLE)
+add_compile_definitions(SPI_PORT=spi1)
+add_compile_definitions(SPI_RX=12)
+add_compile_definitions(SPI_CS=13)
+add_compile_definitions(SPI_SCK=14)
+add_compile_definitions(SPI_TX=15)
+add_compile_definitions(ALTITUDE_AT_LOC=520)
+
+add_compile_definitions(BME280_32BIT_ENABLE)
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  set(CMAKE_VERBOSE_MAKEFILE 1)
+  add_compile_definitions(DEBUG)
+  add_compile_definitions(UPDATE_INTERVAL=10)
+else()
+  add_compile_definitions(UPDATE_INTERVAL=60)
+endif()
 
 pico_set_program_name(pico-bme280 "pico-bme280")
 pico_set_program_version(pico-bme280 "0.1")
