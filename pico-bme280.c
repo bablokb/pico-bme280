@@ -7,6 +7,7 @@
 // --------------------------------------------------------------------------
 
 #include <stdio.h>
+#include <math.h>
 #include "pico/stdlib.h"
 #include "hardware/spi.h"
 
@@ -86,10 +87,12 @@ int8_t read_sensor(struct bme280_dev *dev, uint32_t *delay,
 
 void print_data(struct bme280_data *data) {
   float temp, press, hum;
+  float alt_fac = pow(1.0-ALTITUDE_AT_LOC/44330.0, 5.255);
+
   temp  = 0.01f * data->temperature;
-  press = 0.01f * data->pressure;
+  press = 0.01f * data->pressure/alt_fac;
   hum   = 1.0f / 1024.0f * data->humidity;
-  printf("%0.2lf deg C, %0.2lf hPa, %0.2lf%%\n", temp, press, hum);
+  printf("%0.1f deg C, %0.0f hPa, %0.0f%%\n", temp, press, hum);
 }
 
 // ---------------------------------------------------------------------------
