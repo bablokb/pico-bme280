@@ -46,6 +46,9 @@ int8_t init_sensor(struct bme280_dev *dev, uint32_t *delay) {
   dev->write    = user_spi_write;
   dev->delay_us = user_delay_us;
   rslt = bme280_init(dev);
+#ifdef DEBUG
+  printf("[DEBUG] chip-id: 0x%x\n",dev->chip_id);
+#endif
   if (rslt != BME280_OK) {
     return rslt;
   }
@@ -105,7 +108,7 @@ int main() {
     printf("Temperature, Pressure, Humidity\n");
     while (read_sensor(&dev,&delay,&sensor_data) == BME280_OK) {
       print_data(&sensor_data);
-      sleep_ms(1000);
+      sleep_ms(1000*UPDATE_INTERVAL);
     }
     printf("error while reading sensor: RC: %d", rslt);
   }
