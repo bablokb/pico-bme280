@@ -407,7 +407,6 @@ int8_t bme280_init(struct bme280_dev *dev)
 
     /* chip id read try count */
     uint8_t try_count = 5;
-    uint8_t chip_id = 0;
 
     /* Check for null pointer in the device structure*/
     rslt = null_ptr_check(dev);
@@ -418,13 +417,11 @@ int8_t bme280_init(struct bme280_dev *dev)
         while (try_count)
         {
             /* Read the chip-id of bme280 sensor */
-            rslt = bme280_get_regs(BME280_CHIP_ID_ADDR, &chip_id, 1, dev);
+            rslt = bme280_get_regs(BME280_CHIP_ID_ADDR, &dev->chip_id, 1, dev);
 
             /* Check for chip id validity */
-            if ((rslt == BME280_OK) && (chip_id == BME280_CHIP_ID))
+            if ((rslt == BME280_OK) && (dev->chip_id == BME280_CHIP_ID))
             {
-                dev->chip_id = chip_id;
-
                 /* Reset the sensor */
                 rslt = bme280_soft_reset(dev);
 
