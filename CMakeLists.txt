@@ -52,12 +52,21 @@ pico_set_program_version(pico-bme280 "0.1")
 pico_enable_stdio_uart(pico-bme280 1)
 pico_enable_stdio_usb(pico-bme280 0)
 
+# build the st7735-library from our submodule
+add_subdirectory(pico-st7735/lib-st7735)
+
+# configuration for the st7735-library
+add_compile_definitions(SPI_TFT_CS=9)
+add_compile_definitions(SPI_TFT_DC=10)
+add_compile_definitions(SPI_TFT_RST=11)
+
 # Add the standard library to the build
 target_link_libraries(pico-bme280 pico_stdlib)
 
 # Add any user requested libraries
 target_link_libraries(pico-bme280
         hardware_spi
+        lib-st7735
         )
 
 pico_add_extra_outputs(pico-bme280)
