@@ -28,6 +28,18 @@ void init_hw() {
   gpio_init(SPI_CS);
   gpio_set_dir(SPI_CS, GPIO_OUT);
   gpio_put(SPI_CS, 1);                        // Chip select is active-low
+
+  gpio_init(SPI_TFT_CS);
+  gpio_set_dir(SPI_TFT_CS, GPIO_OUT);
+  gpio_put(SPI_TFT_CS, 1);                        // Chip select is active-low
+
+  gpio_init(SPI_TFT_DC);
+  gpio_set_dir(SPI_TFT_DC, GPIO_OUT);
+  gpio_put(SPI_TFT_DC, 0);                        // Chip select is active-low
+
+  gpio_init(SPI_TFT_RST);
+  gpio_set_dir(SPI_TFT_RST, GPIO_OUT);
+  gpio_put(SPI_TFT_RST, 0);
 }
 
 // ---------------------------------------------------------------------------
