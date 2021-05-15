@@ -13,6 +13,7 @@
 
 #include "user.h"
 #include "bme280.h"
+#include "ST7735_TFT.h"
 
 // ---------------------------------------------------------------------------
 // hardware-specific intialization
@@ -40,6 +41,16 @@ void init_hw() {
   gpio_init(SPI_TFT_RST);
   gpio_set_dir(SPI_TFT_RST, GPIO_OUT);
   gpio_put(SPI_TFT_RST, 0);
+}
+
+// ---------------------------------------------------------------------------
+// initialize TFT
+void init_tft() {
+  #ifdef DEBUG
+    printf("[DEBUG] initializing TFT\n");
+  #endif
+  TFT_BlackTab_Initialize();
+  fillScreen(ST7735_BLUE);
 }
 
 // ---------------------------------------------------------------------------
@@ -116,6 +127,7 @@ int main() {
   int8_t rslt;
   uint32_t delay;               // calculated delay between measurements
   init_hw();
+  init_tft();
   rslt = init_sensor(&dev,&delay);
   if (rslt != BME280_OK) {
     printf("could not initialize sensor. RC: %d\n", rslt);
