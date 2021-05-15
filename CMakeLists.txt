@@ -35,8 +35,14 @@ add_compile_definitions(SPI_CS=13)
 add_compile_definitions(SPI_SCK=14)
 add_compile_definitions(SPI_TX=15)
 add_compile_definitions(ALTITUDE_AT_LOC=520)
-
 add_compile_definitions(BME280_32BIT_ENABLE)
+
+# configuration for the st7735-library
+add_compile_definitions(SPI_TFT_CS=9)
+add_compile_definitions(SPI_TFT_DC=10)
+add_compile_definitions(SPI_TFT_RST=11)
+add_compile_definitions(TFT_ENABLE_RESET TFT_ENABLE_BLACK TFT_ENABLE_TEXT
+                        TFT_ENABLE_SHAPES TFT_ENABLE_FONTS)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   set(CMAKE_VERBOSE_MAKEFILE 1)
@@ -55,19 +61,10 @@ pico_enable_stdio_usb(pico-bme280 0)
 # build the st7735-library from our submodule
 add_subdirectory(pico-st7735/lib-st7735)
 
-# configuration for the st7735-library
-add_compile_definitions(SPI_TFT_CS=9)
-add_compile_definitions(SPI_TFT_DC=10)
-add_compile_definitions(SPI_TFT_RST=11)
-
 # Add the standard library to the build
-target_link_libraries(pico-bme280 pico_stdlib)
-
-# Add any user requested libraries
-target_link_libraries(pico-bme280
-        hardware_spi
-        lib-st7735
-        )
+target_link_libraries(pico-bme280 pico_stdlib
+                                  lib-st7735
+                                  hardware_spi)
 
 pico_add_extra_outputs(pico-bme280)
 
