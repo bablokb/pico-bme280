@@ -14,6 +14,7 @@
 #include "user.h"
 #include "bme280.h"
 #include "ST7735_TFT.h"
+#include "FreeMonoOblique12pt7b.h"
 
 // ---------------------------------------------------------------------------
 // hardware-specific intialization
@@ -53,9 +54,7 @@ void init_tft() {
   #endif
   TFT_BlackTab_Initialize();
   fillScreen(ST7735_BLUE);
-  fillRoundRect(4,  4,120,48,10,ST7735_WHITE);
-  fillRoundRect(4, 56,120,48,10,ST7735_WHITE); //  4 + 48 + 4
-  fillRoundRect(4,108,120,48,10,ST7735_WHITE); // 56 + 48 + 4
+  setFont(&FreeMonoOblique12pt7b);
 }
 
 // ---------------------------------------------------------------------------
@@ -124,6 +123,28 @@ void print_data(struct bme280_data *data) {
 }
 
 // ---------------------------------------------------------------------------
+// display sensor data on TFT
+
+void display_data(struct bme280_data *data) {
+  char temp[8], press[8], hum[4];
+  float alt_fac = pow(1.0-ALTITUDE_AT_LOC/44330.0, 5.255);
+
+  snprintf(temp,8,"%0.1f°C",0.01f * data->temperature);
+  snprintf(press,8,"%0.0fhPa",0.01f * data->pressure/alt_fac);
+  snprintf(hum,4,"%0.0f%%",1.0f / 1024.0f * data->humidity);
+
+  // clear output area
+  fillRoundRect(4,  4,120,48,10,ST7735_WHITE);
+  fillRoundRect(4, 56,120,48,10,ST7735_WHITE); //  4 + 48 + 4
+  fillRoundRect(4,108,120,48,10,ST7735_WHITE); // 56 + 48 + 4
+
+  // write sensor readouts
+  drawText(10, 36,temp,ST7735_BLACK,ST7735_WHITE,1);
+  drawText(10, 88,press,ST7735_BLACK,ST7735_WHITE,1);
+  drawText(10,140,hum,ST7735_BLACK,ST7735_WHITE,1);
+}
+
+// ---------------------------------------------------------------------------
 // main loop: read data and print data to console
 
 int main() {
@@ -140,6 +161,7 @@ int main() {
     printf("Temperature, Pressure, Humidity\n");
     while (read_sensor(&dev,&delay,&sensor_data) == BME280_OK) {
       print_data(&sensor_data);
+      display_data(&sensor_data);
       sleep_ms(1000*UPDATE_INTERVAL);
     }
     printf("error while reading sensor: RC: %d", rslt);
