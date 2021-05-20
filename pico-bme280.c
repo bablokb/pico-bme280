@@ -16,6 +16,16 @@
 #include "ST7735_TFT.h"
 #include "FreeMonoOblique12pt7b.h"
 
+#define FIELDS     3
+#define FIELD_W  120
+#define FIELD_H   48
+#define FIELD_R   10
+#define TEXT_X     6
+#define TEXT_Y    32
+#define TEXT_FG   ST7735_BLACK
+#define TEXT_BG   ST7735_WHITE
+#define TFT_BG    ST7735_BLUE
+
 // ---------------------------------------------------------------------------
 // hardware-specific intialization
 // SPI_* constants from CMakeLists.txt or user.h
@@ -53,7 +63,7 @@ void init_tft() {
     printf("[DEBUG] initializing TFT\n");
   #endif
   TFT_BlackTab_Initialize();
-  fillScreen(ST7735_BLUE);
+  fillScreen(TFT_BG);
   setFont(&FreeMonoOblique12pt7b);
 }
 
@@ -113,26 +123,33 @@ int8_t read_sensor(struct bme280_dev *dev, uint32_t *delay,
 // display sensor data on TFT
 
 void display_data(struct bme280_data *data) {
-  char temp[8], press[8], hum[4];
+  char values[3][8];
   float alt_fac = pow(1.0-ALTITUDE_AT_LOC/44330.0, 5.255);
 
-  snprintf(temp,8,"%0.1f°C",0.01f * data->temperature);
-  snprintf(press,8,"%0.0fhPa",0.01f * data->pressure/alt_fac);
-  snprintf(hum,4,"%0.0f%%",1.0f / 1024.0f * data->humidity);
+  snprintf(values[0],8,"%0.1f°C",0.01f * data->temperature);
+  snprintf(values[1],8,"%0.0fhPa",0.01f * data->pressure/alt_fac);
+  snprintf(values[2],4,"%0.0f%%",1.0f / 1024.0f * data->humidity);
 
   // clear output area
-  fillRoundRect(4,  4,120,48,10,ST7735_WHITE);
-  fillRoundRect(4, 56,120,48,10,ST7735_WHITE); //  4 + 48 + 4
-  fillRoundRect(4,108,120,48,10,ST7735_WHITE); // 56 + 48 + 4
+  uint8_t hgap = (tft_width-FIELD_W)/2;
+  uint8_t vgap = (tft_height-FIELDS*FIELD_H)/(FIELDS+1);
+  uint8_t y    = vgap;
+
+  for (uint8_t i=0; i<FIELDS; ++i) {
+    fillRoundRect(hgap,y,FIELD_W,FIELD_H,FIELD_R,TEXT_BG);
+    y += FIELD_H+vgap;
+  }
 
   // write sensor readouts
-  drawText(10, 36,temp,ST7735_BLACK,ST7735_WHITE,1);
-  drawText(10, 88,press,ST7735_BLACK,ST7735_WHITE,1);
-  drawText(10,140,hum,ST7735_BLACK,ST7735_WHITE,1);
+  y = vgap + TEXT_Y;
+  for (uint8_t i=0; i<FIELDS; ++i) {
+    drawText(hgap+TEXT_X,y,values[i],TEXT_FG,TEXT_BG,1);
+    y += FIELD_H+vgap;
+  }
 }
 
 // ---------------------------------------------------------------------------
-// main loop: read data and print data to console
+// main loop: read data and display on TFT
 
 int main() {
   struct bme280_dev dev;
