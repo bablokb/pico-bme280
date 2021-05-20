@@ -17,11 +17,11 @@
 #include "FreeMonoOblique12pt7b.h"
 
 #define FIELDS     3
-#define FIELD_W  120
-#define FIELD_H   48
-#define FIELD_R   10
-#define TEXT_X     6
-#define TEXT_Y    32
+#define FIELD_W  110
+#define FIELD_H   36
+#define FIELD_R    5
+#define TEXT_X     8
+#define TEXT_Y    26
 #define TEXT_FG   ST7735_BLACK
 #define TEXT_BG   ST7735_WHITE
 #define TFT_BG    ST7735_BLUE
