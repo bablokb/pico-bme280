@@ -45,12 +45,17 @@ void init_hw() {
 
 // ---------------------------------------------------------------------------
 // initialize TFT
+// Background plus three fields
+
 void init_tft() {
   #ifdef DEBUG
     printf("[DEBUG] initializing TFT\n");
   #endif
   TFT_BlackTab_Initialize();
   fillScreen(ST7735_BLUE);
+  fillRoundRect(4,  4,120,48,10,ST7735_WHITE);
+  fillRoundRect(4, 56,120,48,10,ST7735_WHITE); //  4 + 48 + 4
+  fillRoundRect(4,108,120,48,10,ST7735_WHITE); // 56 + 48 + 4
 }
 
 // ---------------------------------------------------------------------------
