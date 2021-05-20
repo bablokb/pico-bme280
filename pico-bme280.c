@@ -123,12 +123,12 @@ int8_t read_sensor(struct bme280_dev *dev, uint32_t *delay,
 // display sensor data on TFT
 
 void display_data(struct bme280_data *data) {
-  char values[3][8];
+  char values[3][10];
   float alt_fac = pow(1.0-ALTITUDE_AT_LOC/44330.0, 5.255);
 
-  snprintf(values[0],8,"%0.1f°C",0.01f * data->temperature);
-  snprintf(values[1],8,"%0.0fhPa",0.01f * data->pressure/alt_fac);
-  snprintf(values[2],4,"%0.0f%%",1.0f / 1024.0f * data->humidity);
+  snprintf(values[0],10,"%+0.1f°C",0.01f * data->temperature);
+  snprintf(values[1],10,"%0.0fhPa",0.01f * data->pressure/alt_fac);
+  snprintf(values[2],10,"%0.0f%%",1.0f / 1024.0f * data->humidity);
 
   // clear output area
   uint8_t hgap = (tft_width-FIELD_W)/2;
