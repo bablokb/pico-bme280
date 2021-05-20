@@ -110,19 +110,6 @@ int8_t read_sensor(struct bme280_dev *dev, uint32_t *delay,
 }
 
 // ---------------------------------------------------------------------------
-// print sensor data to console
-
-void print_data(struct bme280_data *data) {
-  float temp, press, hum;
-  float alt_fac = pow(1.0-ALTITUDE_AT_LOC/44330.0, 5.255);
-
-  temp  = 0.01f * data->temperature;
-  press = 0.01f * data->pressure/alt_fac;
-  hum   = 1.0f / 1024.0f * data->humidity;
-  printf("%0.1f deg C, %0.0f hPa, %0.0f%%\n", temp, press, hum);
-}
-
-// ---------------------------------------------------------------------------
 // display sensor data on TFT
 
 void display_data(struct bme280_data *data) {
@@ -160,7 +147,6 @@ int main() {
   } else {
     printf("Temperature, Pressure, Humidity\n");
     while (read_sensor(&dev,&delay,&sensor_data) == BME280_OK) {
-      print_data(&sensor_data);
       display_data(&sensor_data);
       sleep_ms(1000*UPDATE_INTERVAL);
     }
