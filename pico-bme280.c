@@ -151,6 +151,21 @@ void display_data(struct bme280_data *data) {
   }
 }
 
+#ifdef DEBUG
+// ---------------------------------------------------------------------------
+// print sensor data to console
+
+void print_data(struct bme280_data *data) {
+  float temp, press, hum;
+  float alt_fac = pow(1.0-ALTITUDE_AT_LOC/44330.0, 5.255);
+
+  temp  = 0.01f * data->temperature;
+  press = 0.01f * data->pressure/alt_fac;
+  hum   = 1.0f / 1024.0f * data->humidity;
+  printf("%0.1f deg C, %0.0f hPa, %0.0f%%\n", temp, press, hum);
+}
+#endif
+
 // ---------------------------------------------------------------------------
 // main loop: read data and display on TFT
 
@@ -165,8 +180,13 @@ int main() {
   if (rslt != BME280_OK) {
     printf("could not initialize sensor. RC: %d\n", rslt);
   } else {
-    printf("Temperature, Pressure, Humidity\n");
+    #ifdef DEBUG
+      printf("Temperature, Pressure, Humidity\n");
+    #endif
     while (read_sensor(&dev,&delay,&sensor_data) == BME280_OK) {
+      #ifdef DEBUG
+        print_data(&sensor_data);
+      #endif
       display_data(&sensor_data);
       sleep_ms(1000*UPDATE_INTERVAL);
     }
