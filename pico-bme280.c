@@ -102,6 +102,9 @@ int8_t init_sensor(struct bme280_dev *dev, uint32_t *delay) {
   }
   rslt   = bme280_set_sensor_settings(settings,dev);
   *delay = bme280_cal_meas_delay(&dev->settings);
+#ifdef DEBUG
+  printf("[DEBUG] delay: %u µs\n",*delay);
+#endif
   return rslt;
 }
 
