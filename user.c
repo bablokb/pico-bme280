@@ -19,13 +19,13 @@ int8_t user_spi_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t len, void *in
   // So it is pointless to check the results.
   int8_t rslt = 0;
   asm volatile("nop \n nop \n nop");
-  gpio_put(SPI_CS, 0);                        // Chip select is active-low
+  gpio_put(SPI_CS, 0);                        // Chip select is low
   asm volatile("nop \n nop \n nop");
   spi_write_blocking(SPI_PORT,&reg_addr,1);
   sleep_ms(10);
   spi_read_blocking(SPI_PORT,0,reg_data,len);
   asm volatile("nop \n nop \n nop");
-  gpio_put(SPI_CS, 1);                        // Chip select is active-low
+  gpio_put(SPI_CS, 1);                        // Chip de-select is high
   asm volatile("nop \n nop \n nop");
   return rslt;
 }
@@ -33,12 +33,12 @@ int8_t user_spi_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t len, void *in
 int8_t user_spi_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t len, void *intf_ptr) {
   int8_t rslt = 0;
   asm volatile("nop \n nop \n nop");
-  gpio_put(SPI_CS, 0);                        // Chip select is active-low
+  gpio_put(SPI_CS, 0);                        // Chip select is low
   asm volatile("nop \n nop \n nop");
   spi_write_blocking(SPI_PORT,&reg_addr,1);
   spi_write_blocking(SPI_PORT,reg_data,len);
   asm volatile("nop \n nop \n nop");
-  gpio_put(SPI_CS, 1);                        // Chip select is active-low
+  gpio_put(SPI_CS, 1);                        // Chip de-select is high
   asm volatile("nop \n nop \n nop");
   return rslt;
 }
