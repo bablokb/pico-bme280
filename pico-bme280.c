@@ -151,10 +151,10 @@ void display_data(struct bme280_data *data) {
   }
 }
 
-#ifdef DEBUG
 // ---------------------------------------------------------------------------
 // print sensor data to console
 
+#ifdef DEBUG
 void print_data(struct bme280_data *data) {
   float temp, press, hum;
   float alt_fac = pow(1.0-ALTITUDE_AT_LOC/44330.0, 5.255);
@@ -163,6 +163,16 @@ void print_data(struct bme280_data *data) {
   press = 0.01f * data->pressure/alt_fac;
   hum   = 1.0f / 1024.0f * data->humidity;
   printf("%0.1f deg C, %0.0f hPa, %0.0f%%\n", temp, press, hum);
+}
+#elif defined(LOG)
+void print_data(uint32_t ts,struct bme280_data *data) {
+  float temp, press, hum;
+  float alt_fac = pow(1.0-ALTITUDE_AT_LOC/44330.0, 5.255);
+
+  temp  = 0.01f * data->temperature;
+  press = 0.01f * data->pressure/alt_fac;
+  hum   = 1.0f / 1024.0f * data->humidity;
+  printf("%lu,%0.1f,%0.0f,%0.0f\n",ts,temp,press,hum);
 }
 #endif
 
@@ -182,10 +192,15 @@ int main() {
   } else {
     #ifdef DEBUG
       printf("Temperature, Pressure, Humidity\n");
+    #elif defined LOG
+      printf("Timestamp(ms),Temp(degC),Press(hPa),Hum(%)\n");
     #endif
     while (read_sensor(&dev,&delay,&sensor_data) == BME280_OK) {
       #ifdef DEBUG
         print_data(&sensor_data);
+      #elif defined LOG
+        uint32_t ts = to_ms_since_boot(get_absolute_time());
+        print_data(ts,&sensor_data);
       #endif
       display_data(&sensor_data);
       sleep_ms(1000*UPDATE_INTERVAL);
