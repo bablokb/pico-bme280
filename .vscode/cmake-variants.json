@@ -1,0 +1,38 @@
+{
+  "build_type": {
+    "default": "Debug",
+    "description": "The CMake build type to use",
+    "choices": {
+      "Debug": {
+        "short": "Debug",
+        "long": "Disables optimizations and includes debug info.",
+        "buildType": "Debug"
+      },
+      "Release": {
+        "short": "Release",
+        "long": "Includes optimizations but no debug info.",
+        "buildType": "Release"
+      }
+    }
+  },
+  "log": {
+    "default": "off",
+    "description": "data-logging on/off",
+    "choices": {
+      "off": {
+        "short": "log off",
+        "long": "no data-logging",
+        "settings": {
+          "LOG": "false"
+        }
+      },
+      "on": {
+        "short": "log on",
+        "long": "with data-logging",
+        "settings": {
+          "LOG": "true"
+        }
+      }
+    }
+  }
+}
