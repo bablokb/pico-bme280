@@ -26,11 +26,18 @@
           "LOG": "false"
         }
       },
-      "on": {
-        "short": "log on",
-        "long": "with data-logging",
+      "usb": {
+        "short": "log to usb",
+        "long": "with data-logging to usb",
         "settings": {
-          "LOG": "true"
+          "LOG": "USB"
+        }
+      },
+      "serial": {
+        "short": "log to serial",
+        "long": "with data-logging to serial",
+        "settings": {
+          "LOG": "SERIAL"
         }
       }
     }
